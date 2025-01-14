@@ -1,29 +1,35 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using ContactApp.Models;
 
-namespace ContactApp.Controllers;
-
-public class HomeController : Controller
+namespace ContactApp.Controllers
 {
-    // Route pour afficher la liste des contacts
-    public IActionResult Index()
+    public class HomeController : Controller
     {
-        return View();
-    }
+        // Action pour la page d'accueil (par défaut)
+        public IActionResult Index()
+        {
+            // Vous pouvez afficher une vue d'accueil ou simplement une page de bienvenue.
+            return View();
+        }
 
-    // Route pour afficher un contact spécifique
-    public IActionResult Details(int id)
-    {
-        // Pour l'instant, on passe l'ID du contact dans la vue
-        ViewBag.ContactId = id;
-        return View();
-    }
+        // Action pour la page "About"
+        public IActionResult About()
+        {
+            ViewData["Message"] = "Votre application de gestion des contacts.";
+            return View();
+        }
 
-    // Route pour ajouter un contact
-    public IActionResult Add()
-    {
-        return View();
+        // Action pour la page "Contact"
+        public IActionResult Contact()
+        {
+            ViewData["Message"] = "Page de contact.";
+            return View();
+        }
+
+        // Action pour la page "Privacy"
+        public IActionResult Privacy()
+        {
+            return View();
+        }
     }
 }
 

@@ -1,0 +1,23 @@
+﻿@model ContactApp.Models.Contact
+@{
+    ViewData["Title"] = "Détails du contact";
+}
+
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+
+    <div class="row">
+        <div class="col-md-4"><strong>@Html.DisplayNameFor(m => m.Name)</strong></div>
+        <div class="col-md-8">@Html.DisplayFor(m => m.Name)</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"><strong>@Html.DisplayNameFor(m => m.Email)</strong></div>
+        <div class="col-md-8">@Html.DisplayFor(m => m.Email)</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"><strong>@Html.DisplayNameFor(m => m.Phone)</strong></div>
+        <div class="col-md-8">@Html.DisplayFor(m => m.Phone)</div>
+    </div>
+
+    <a href="@Url.Action("Index", "Contact")" class="btn btn-primary">Retour à la liste</a>
+</div>
