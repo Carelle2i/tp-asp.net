@@ -1,0 +1,34 @@
+﻿@model IEnumerable<ContactApp.Models.Contact>
+@{
+    ViewData["Title"] = "Liste des contacts";
+}
+
+<div class="container">
+    <h1>@ViewBag.Message</h1>
+    <p>@ViewData["Description"]</p>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var contact in Model)
+        {
+            <tr>
+                <td>@contact.Name</td>
+                <td>@contact.Email</td>
+                <td>@contact.Phone</td>
+                <td>
+                    <!-- Lien Tag Helper pour afficher les détails du contact -->
+                    <a asp-action="Details" asp-route-id="@contact.Id" class="btn btn-info">Voir</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

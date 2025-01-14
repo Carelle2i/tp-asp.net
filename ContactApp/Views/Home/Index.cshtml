@@ -1,34 +1,11 @@
-﻿@model IEnumerable<ContactApp.Models.Contact>
-@{
-    ViewData["Title"] = "Liste des contacts";
+﻿@{
+    ViewData["Title"] = "Home Page";
 }
 
-<div class="container">
-    <h1>@ViewBag.Message</h1>
-    <p>@ViewData["Description"]</p>
-
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Details</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var contact in Model)
-        {
-            <tr>
-                <td>@contact.Name</td>
-                <td>@contact.Email</td>
-                <td>@contact.Phone</td>
-                <td>
-                    <!-- Lien Tag Helper pour afficher les détails du contact -->
-                    <a asp-action="Details" asp-route-id="@contact.Id" class="btn btn-info">Voir</a>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+<div class="jumbotron">
+    <h1 class="display-4">Bienvenue sur notre application de gestion des contacts !</h1>
+    <p class="lead">Cette application vous permet de gérer vos contacts facilement.</p>
+    <hr class="my-4">
+    <p>Vous pouvez consulter la liste des contacts, voir les détails d'un contact, et ajouter de nouveaux contacts.</p>
+    <a class="btn btn-primary btn-lg" href="@Url.Action("Index", "Contact")" role="button">Voir les contacts</a>
 </div>
