@@ -2,61 +2,63 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using TodoListApp.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using TodoListApp.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Ajouter l'authentification avec les cookies
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Account/Login";
-        options.LogoutPath = "/Account/Logout"; // Vous pouvez ajouter une route de déconnexion ici
-    });
-
-// Ajouter la gestion des sessions
+// Configuration des services
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Durée de la session
 });
 
-// Ajouter les contrôleurs avec vues
+// Configuration de l'authentification avec cookies
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout"; // Ajoutez une route de déconnexion si nécessaire
+    });
+
 builder.Services.AddControllersWithViews();
 
-// Configurer le DbContext avec la chaîne de connexion de la base de données
+// Configuration du DbContext avec la chaîne de connexion à la base de données
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Ajouter Identity avec votre ApplicationUser personnalisé
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+// Construction de l'application
 var app = builder.Build();
 
-// Initialiser la base de données avec des données par défaut (Seeder)
-DbInitializer.Initialize(app.Services, app.Services.GetRequiredService<ApplicationDbContext>());
-
-// Configurer le pipeline HTTP
-if (app.Environment.IsDevelopment())
+// Initialisation de la base de données après que l'application ait été construite
+using (var scope = app.Services.CreateScope())
 {
-    app.UseDeveloperExceptionPage(); // Afficher les détails des erreurs en mode développement
-}
-else
-{
-    app.UseExceptionHandler("/Home/Error"); // Gestion des erreurs en production
-    app.UseHsts(); // Utiliser HSTS en production
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    DbInitializer.Initialize(services, context);  // Appel de la méthode DbInitializer
 }
 
-app.UseHttpsRedirection(); // Rediriger toutes les requêtes HTTP vers HTTPS
-app.UseStaticFiles(); // Servir les fichiers statiques (CSS, JS, images, etc.)
-app.UseRouting(); // Configurer le routage
-
-// Ajouter l'authentification, l'autorisation et la gestion des sessions
+// Middleware pour gérer l'authentification, l'autorisation et la session
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseSession(); // Ajouter la gestion des sessions
 
-// Configurer la route par défaut
+app.UseSession();
+
+// Configuration du pipeline HTTP
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
+// Configurer les routes de l'application
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Todo}/{action=Index}/{id?}");
 
-// Lancer l'application
 app.Run();
+

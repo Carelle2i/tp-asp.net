@@ -1,49 +1,74 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using TodoListApp.Models;
 using System.Threading.Tasks;
 
 namespace TodoListApp.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+        }
+
         // Page de connexion
         public IActionResult Login()
         {
             return View();
         }
 
-        // Action de connexion
+        // Traitement de la connexion
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            // Validation des informations d'identification (exemple basique)
-            if (username == "admin" && password == "password") // Utilisez une validation plus robuste dans la production
+            var user = await _userManager.FindByNameAsync(username);
+            if (user != null && await _userManager.CheckPasswordAsync(user, password))
             {
-                var claims = new[]
-                {
-                    new Claim(ClaimTypes.Name, username),
-                    new Claim(ClaimTypes.Role, "Admin")
-                };
-
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-                return RedirectToAction("Index", "Todo");
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Todo");  // Redirige vers la page d'accueil ou une page de votre choix
             }
-
-            ModelState.AddModelError("", "Nom d'utilisateur ou mot de passe incorrect");
+            ModelState.AddModelError("", "Nom d'utilisateur ou mot de passe incorrect.");
             return View();
         }
 
-        // Action de déconnexion
+        // Page d'inscription
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        // Traitement de l'inscription
+        [HttpPost]
+        public async Task<IActionResult> Register(string username, string password)
+        {
+            var user = new ApplicationUser { UserName = username };
+            var result = await _userManager.CreateAsync(user, password);
+
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Todo");  // Rediriger vers la page d'accueil après inscription
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+            return View();
+        }
+
+        // Déconnexion
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Todo");
+            await _signInManager.SignOutAsync();  // Déconnexion
+            return RedirectToAction("Index", "Home");  // Rediriger vers la page d'accueil
         }
     }
 }
