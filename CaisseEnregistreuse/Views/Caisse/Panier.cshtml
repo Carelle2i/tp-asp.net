@@ -1,0 +1,30 @@
+﻿@model List<CaisseEnregistreuse.Models.ProduitPanier>
+
+<h2>Panier</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Nom</th>
+        <th>Prix</th>
+        <th>Quantité</th>
+        <th>Montant</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>@item.Nom</td>
+        <td>@item.Prix</td>
+        <td>@item.Quantite</td>
+        <td>@(item.Prix * item.Quantite)</td>
+    </tr>
+    }
+    </tbody>
+</table>
+
+<p>Total : @ViewBag.Total</p>
+
+<a href="@Url.Action("ViderPanier", "Caisse")">Vider le panier</a>
+<a href="@Url.Action("PasserCommande", "Caisse")">Passer commande</a>
