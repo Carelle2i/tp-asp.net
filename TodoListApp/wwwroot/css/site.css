@@ -1,0 +1,134 @@
+/* Conteneur principal */
+.container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Titre principal */
+h1 {
+  text-align: center;
+  color: #333;
+  font-size: 36px;
+}
+
+/* Conteneur du tableau */
+.table-container {
+  margin-top: 20px;
+}
+
+/* Tableau */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+}
+
+/* Style des en-têtes */
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+/* Style des boutons */
+button {
+  padding: 5px 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+/* Bouton "Finie" */
+.finish-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.finish-btn:hover {
+  background-color: #45a049;
+}
+
+/* Bouton "Supprimer" */
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+  margin-left: 5px;
+}
+
+.delete-btn:hover {
+  background-color: #e53935;
+}
+
+/* Conteneur de pagination */
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Pagination - Liens */
+.pagination a {
+  margin: 0 5px;
+  text-decoration: none;
+  color: #007bff;
+  font-size: 16px;
+}
+
+.pagination a:hover {
+  text-decoration: underline;
+}
+
+/* Bouton Ajouter */
+.add-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  display: block;
+  width: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.add-btn:hover {
+  background-color: #218838;
+}
+
+/* Conteneur de recherche */
+.search-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-container input {
+  padding: 8px;
+  font-size: 14px;
+  width: 150px;
+}
+
+.search-container button {
+  padding: 8px 20px;
+  background-color: #007bff;
+  color: white;
+  font-size: 14px;
+  border-radius: 5px;
+}
+
+.search-container button:hover {
+  background-color: #0056b3;
+}
